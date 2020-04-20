@@ -19,3 +19,13 @@
 .modal .close {
   color: #fff;
 }
+
+/*
+ * Toast
+ */
+.toast {
+  text-shadow: none; /* Prevent inheritance from `body` */
+}
+.toast-body {
+  color: #333;
+}

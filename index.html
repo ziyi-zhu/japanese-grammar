@@ -13,6 +13,8 @@
     <!-- Place your kit's code here -->
     <script src="https://kit.fontawesome.com/c6be8da715.js" crossorigin="anonymous"></script>
 
+    <link rel="shortcut icon" href="public/images/favicon.png"/>
+
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -66,7 +68,8 @@
       <main role="main" class="text-center inner cover">
         <div id="main">
           <h1 class="cover-heading" id="name">Welcome to Japanese Grammar</h1>
-          <i class="fas fa-volume-up" id="speak"></i>
+          <a href="#" class="mx-1"><i class="fas fa-volume-up" id="listen"></i></a>
+          <a href="#" class="mx-1"><i class="fas fa-microphone" id="speak"></i></a>
           <p class="lead" id="sentence">Sentence is loading...</p>
           <p class="lead">
             <a href="#" class="btn btn-lg btn-secondary" id="learnButton">Learn</a>
@@ -115,6 +118,50 @@
           </div>
         </div>
       </div>
+
+      <!-- Toast -->
+      <div aria-live="polite" aria-atomic="true" class="m-3" style="position: absolute; top: 0; right: 0;">
+      <!-- Position it -->
+      <div style="position: absolute; width: 300px; top: 0; right: 0;">
+        <!-- Then put toasts within -->
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" id="speechSynthesis">
+          <div class="toast-header">
+            <i class="fas fa-volume-up mr-2"></i>
+            <strong class="mr-auto">Listen to the sentence</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+            Listen to the pronunciation and try to repeat the sentence.
+          </div>
+        </div>
+
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" id="speechRecognition">
+          <div class="toast-header">
+            <i class="fas fa-microphone mr-2"></i>
+            <strong class="mr-auto">Say the sentence out load</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+            Your response will be evaluated.
+          </div>
+        </div>
+
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false" id="speechResult">
+          <div class="toast-header">
+            <i class="fas fa-microphone mr-2"></i>
+            <strong class="mr-auto">What you said was</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body" id="speechToastBody"></div>
+        </div>
+      </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

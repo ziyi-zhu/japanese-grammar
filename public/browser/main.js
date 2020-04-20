@@ -1,5 +1,8 @@
 let jsonQuery = require("json-query")
 
+let level = "N3";
+let grammar, usage, example;
+
 function getGrammarById(id) {
 	let query = jsonQuery(`grammar[id=${id}]`, {
 		data: data
@@ -15,21 +18,41 @@ function getGrammarByLevel(level) {
 }
 
 let speechRate = 1;
+let speechRecognition = new window.webkitSpeechRecognition();
+ 
+speechRecognition.continuous = false;
+speechRecognition.lang = "ja-JP";
 
-function speak(sentence) {
+speechRecognition.onresult = function(event) {
+	let current = event.resultIndex;
+	let transcript = event.results[current][0].transcript;
+
+	console.log(transcript);
+	$("#speechToastBody").text("");
+	for (let i = 0; i < transcript.length; i++) {
+		if (example.sentence.includes(transcript[i])) {
+			$("#speechToastBody").append(`<span class="text-success">${transcript[i]}</span>`);
+		} else {
+			$("#speechToastBody").append(`<span class="text-danger">${transcript[i]}</span>`);
+		}
+	}
+	$("#speechResult").toast("show");
+};
+
+function speechSynthesis(sentence) {
 	if (window.speechSynthesis.getVoices().length == 0) {
 		window.speechSynthesis.addEventListener("voiceschanged", function() {
-			textToSpeech();
+			textToSpeech(sentence);
 		});
 	} else {
-		textToSpeech(sentence)
+		textToSpeech(sentence);
 	}
 
 	function textToSpeech(sentence) {
 		let available_voices = window.speechSynthesis.getVoices();
 		let voice = "";
 
-		for (let i=0; i<available_voices.length; i++) {
+		for (let i = 0; i < available_voices.length; i++) {
 			if (available_voices[i].lang === "ja-JP") {
 				voice = available_voices[i];
 				break;
@@ -59,19 +82,19 @@ function addGrammarHTML(id, grammar) {
 		$(`#${id}`).append(`<ol id="${i}">`);
 		for (let j = 0; j < usage.example.length; j++) {
 			let example = usage.example[j];
-			$(`#${i}`).append(`<li id="${i}-${j}">${example.sentence}【${example.translation}】<i class="fas fa-volume-up"></i></li>`);
+			$(`#${i}`).append(`<li>${example.sentence}【${example.translation}】<a href="#"><i class="fas fa-volume-up" id="${i}-${j}"></i></a></li>`);
 			$(`#${i}-${j}`).click(function() {
-				speak(example.sentence);
+				speechSynthesis(example.sentence);
 			})
 		}
 
-		if(typeof(usage.note) !== "undefined"){
+		if (typeof(usage.note) !== "undefined") {
 		    for (let j = 0; j < usage.note.length; j++) {
 				$(`#${id}`).append(`<p class="text-danger">${usage.note[j]}</p>`);
 			}
 		}	    
 	}
-	if(typeof(grammar.note) !== "undefined"){
+	if (typeof(grammar.note) !== "undefined") {
 		$(`#${id}`).append(`<div class="text-center mb-3"><button class="btn btn-secondary">補充</button></div>`);
 	    for (let j = 0; j < grammar.note.length; j++) {
 			$(`#${id}`).append(`<p">${grammar.note[j]}</p>`);
@@ -98,11 +121,12 @@ function choose(choices) {
 	return choices[index];
 }
 
-let level = "N3";
-let grammar, usage, example;
-
 function chooseGrammar(level) {
-	grammar = choose(getGrammarByLevel(level));
+	let newGrammar = choose(getGrammarByLevel(level));
+	while (newGrammar == grammar) {
+		newGrammar = choose(getGrammarByLevel(level));
+	}
+	grammar = newGrammar;
 	usage = choose(grammar.usage);
 	example = choose(usage.example);
 
@@ -124,15 +148,21 @@ $("#nextButton").click(function() {
 	chooseGrammar(level);
 })
 
+$("#listen").click(function() {
+	$("#speechSynthesis").toast("show");
+	speechSynthesis(example.sentence);
+})
+
+$("#speak").click(function() {
+	$("#speechRecognition").toast("show");
+	speechRecognition.start();
+})
+
 $("#list").click(function() {
 	let list = getGrammarByLevel(level);
 	$("#grammarListModalLabel").text("Grammar List: JLPT " + level);
 	addGrammarListHTML("grammarListModalBody", list);
 	$("#grammarListModal").modal("show");
-})
-
-$("#speak").click(function() {
-	speak(example.sentence);
 })
 
 $(".dropdown-item").click(function(event) {
