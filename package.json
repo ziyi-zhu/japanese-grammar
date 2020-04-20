@@ -1,0 +1,23 @@
+{
+  "name": "japanese-grammar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ziyi-zhu/japanese-grammar.git"
+  },
+  "author": "Ziyi Zhu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ziyi-zhu/japanese-grammar/issues"
+  },
+  "homepage": "https://github.com/ziyi-zhu/japanese-grammar#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "json-query": "^2.2.2"
+  }
+}
